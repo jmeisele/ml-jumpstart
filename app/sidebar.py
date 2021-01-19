@@ -11,6 +11,38 @@ import streamlit as st
 # Format of the dict:
 # option 1: framework -> model -> code
 # option 2 – if model has multiple variants: framework -> model -> model variant -> code
+# option 3: framework -> problem -> model -> code
+
+# MODELS = {
+#     "PyTorch": {
+#         "AlexNet": "alexnet",  # single model variant
+#         "ResNet": {  # multiple model variants
+#             "ResNet 18": "resnet18",
+#             "ResNet 34": "resnet34",
+#             "ResNet 50": "resnet50",
+#             "ResNet 101": "resnet101",
+#             "ResNet 152": "resnet152",
+#         },
+#         "DenseNet": "densenet",
+#         "VGG": {
+#             "VGG11": "vgg11",
+#             "VGG11 with batch normalization": "vgg11_bn",
+#             "VGG13": "vgg13",
+#             "VGG13 with batch normalization": "vgg13_bn",
+#             "VGG16": "vgg16",
+#             "VGG16 with batch normalization": "vgg16_bn",
+#             "VGG19": "vgg19",
+#             "VGG19 with batch normalization": "vgg19_bn",
+#         },
+#     },
+#     "scikit-learn": {
+#         "Support vectors": "sklearn.svm.SVC",
+#         "Random forest": "sklearn.ensemble.RandomForestClassifier",
+#         "Decision tree": "sklearn.tree.DecisionTreeClassifier",
+#         "Perceptron": "sklearn.linear_model.Perceptron",
+#         "K-nearest neighbors": "sklearn.neighbors.KNeighborsClassifier",
+#     },
+# }
 MODELS = {
     "PyTorch": {
         "AlexNet": "alexnet",  # single model variant
@@ -34,11 +66,76 @@ MODELS = {
         },
     },
     "scikit-learn": {
-        "Support vectors": "sklearn.svm.SVC",
-        "Random forest": "sklearn.ensemble.RandomForestClassifier",
-        "Decision tree": "sklearn.tree.DecisionTreeClassifier",
-        "Perceptron": "sklearn.linear_model.Perceptron",
-        "K-nearest neighbors": "sklearn.neighbors.KNeighborsClassifier",
+        "Supervised Learning": {
+            "Linear Models": {
+                "Ordinary Least Squares": "sklearn.linear_model.LinearRegression",
+                "Ridge Regression": "sklearn.linear_model.Ridge",
+                "Lasso Regression": "sklearn.linear_model.Lasso",
+                "Multi-Task Lasso": "sklearn.linear_model.MultiTaskLasso",
+                "Elastic Net": "sklearn.linear_model.ElasticNet",
+                "Multi-Task Elastic Net": "sklearn.linear_model.MultiTaskElasticNet",
+                "Least Angle Regression (LARS)": "sklearn.linear_model.Lars",
+                "LARS Lasso": "sklearn.linear_model.LassoLars",
+                "Orthogonal Matching Pursuit": "sklearn.linear_model.OrthogonalMatchingPursuit",
+                "Bayesian Ridge Regression": "sklearn.linear_model.BayesianRidge",
+                "Automatic Relevance Determination (ARD)": "sklearn.linear_model.ARDRegression",
+                "Logistic Regression": "sklearn.linear_model.LogisticRegression",
+                "Tweedie Regressor": "sklearn.linear_model.TweedieRegressor",
+                "Stochastic Gradient Descent Regressor": "sklearn.linear_model.SGDRegressor",
+                "Perceptron": "sklearn.linear_model.Perceptron",
+                "Passive Aggressive Regressor": "sklearn.linear_model.PassiveAggressiveRegressor",
+                "Passive Aggressive Classification": "sklearn.linear_model.PassiveAggressiveClassifier",
+                "RANSAC (RANdom SAmple Consensus)": "sklearn.linear_model.RANSACRegressor",
+                "Theil Sen Regressor": "sklearn.linear_model.TheilSenRegressor",
+                "Huber Regression": "sklearn.linear_model.HuberRegressor"
+            },
+            "Linear and Quadratic Discriminant Analysis": {
+                "Linear Discriminent Analysis": "sklearn.discriminant_analysis.LinearDiscriminantAnalysis",
+                "Quadratic Discriminant Analysis": "sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis"
+            },
+            "Kernel Ridge Regression": {
+                "Kernel Ridge Regression": "sklearn.kernel_ridge.KernelRidge"
+            },
+            "Support Vector Machines": {
+                "Support Vector Classification": "sklearn.svm.SVC",
+                "Nu-Support Vector Classification": "sklearn.svm.NuSVC",
+                "Linear Support Classification": "sklearn.svm.LinearSVC",
+                "Support Vector Regression": "sklearn.svm.SVR",
+                "Nu-Support Vector Regression": "sklearn.svm.NuSVR",
+                "Linear Support Regression": "sklearn.svm.LinearSVR"
+            },
+            "Stochastic Gradient Descent": {
+                "Stochastic Gradient Descent Classification": "sklearn.linear_model.SGDClassifier",
+                "Stochastic Gradient Descent Regression": "sklearn.linear_model.SGDRegressor"
+            },
+            "Nearest Neighbors": {
+                "Nearest Neighbors": "sklearn.neighbors.NearestNeighbors",
+                "KDTree": "sklearn.neighbors.KDTree",
+                "Ball Tree": "sklearn.neighbors.BallTree",
+                "K-Nearest Neighbors Classification": "sklearn.neighbors.KNeighborsClassifier"
+
+            },
+            "Gaussian Processes": {
+
+            },
+            "Cross decomposition": {
+
+            },
+            "Naive Bayes": {
+
+            },
+            "Decision Trees": {
+
+            },
+            "Ensemble Methods": {
+
+            },
+        },
+        "Unsupervised Learning": {
+
+        },
+        # "Perceptron": "sklearn.linear_model.Perceptron",
+        # "K-nearest neighbors": "sklearn.neighbors.KNeighborsClassifier",
     },
 }
 
@@ -63,18 +160,39 @@ def show():
     with st.sidebar:
         st.write("## Task")
         inputs["task"] = st.selectbox(
-            "Which problem do you want to solve?",
-            ("Regression", "Classification", "Clustering"),
+            "Which type of problem do you want to solve?",
+            # ("Regression", "Classification", "Clustering"),
+            ("Supervised Learning", "Unsupervised Learning", "Deep Learning"),
         )
-        if inputs["task"] == "Object detection":
-            st.write(
-                "Coming soon! [Tell me](mailto:jeisele@shipt.com) what you need."
-            )
+        if inputs["task"] == "Supervised Learning":
+            st.write("## Model")
+            framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            inputs["framework"] = framework
+            model_task = inputs["task"]
+            model_variant = st.selectbox("Which model type?", list(MODELS[framework][model_task].keys()))
+            model = st.selectbox("Which model?", list(MODELS[framework][model_task][model_variant].keys()))
+            # if isinstance(MODELS[framework][model], dict):  # different model variants
+            #     model_variant = st.selectbox(
+            #         "Which model?", list(MODELS[framework][model].keys())
+            #     )
+            #     inputs["model_func"] = MODELS[framework][model][model_variant]
+            # else:  # only one variant
+            #     inputs["model_func"] = MODELS[framework][model]
+
+        elif inputs["task"] == "Unsupervised Learning":
+            st.write("## Model")
+            framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            inputs["framework"] = framework
+            model = st.selectbox("Which model?", list(MODELS[framework].keys()))
+        elif inputs["task"] == "Deep Learning":
+            st.write("## Model")
+            framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            inputs["framework"] = framework
+            model = st.selectbox("Which model?", list(MODELS[framework].keys()))
         else:
             # st.write(
             #     "Classify an image into one out of several classes, based on the image content (e.g. 'cat' or 'dog')."
             # )
-
             st.write("## Model")
             framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
             inputs["framework"] = framework
