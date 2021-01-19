@@ -20,7 +20,7 @@ def show():
     with st.sidebar:
         st.write("## Task")
         inputs["task"] = st.selectbox(
-            "Which type of problem do you want to solve?",
+            "Which type of Machine Learning Experiment?",
             ("Supervised Learning", "Unsupervised Learning", "Deep Learning"),
         )
         if inputs["task"] == "Supervised Learning":
@@ -65,7 +65,7 @@ def show():
                         '<sup>Pre-training on ImageNet with 1k classes, <a href="https://pytorch.org/docs/stable/torchvision/models.html">details</a></sup>',
                         unsafe_allow_html=True,
                     )
-        
+
         st.write("## Preprocessing")
         if framework == "scikit-learn":
             # if inputs["data_format"] == "Image files":
