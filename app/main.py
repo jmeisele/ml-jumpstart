@@ -11,13 +11,12 @@ import uuid
 
 import utils
 import sidebar
-# import sidebar2
 
 import streamlit as st
 from jinja2 import Environment, FileSystemLoader
 from github import Github
 from dotenv import load_dotenv
-
+from loguru import logger
 
 MAGE_EMOJI_URL = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/twitter/259/mage_1f9d9.png"
 
@@ -69,6 +68,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # Display sidebar and get user inputs.
 inputs = sidebar.show()
+logger.debug(inputs)
 
 if inputs["task"] == "Image classification":
 

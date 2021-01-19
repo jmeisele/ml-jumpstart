@@ -6,6 +6,7 @@ Email: jeisele@shipt.com
 """
 
 import streamlit as st
+import model_config
 
 # Define possible models in a dict.
 # Format of the dict:
@@ -44,27 +45,6 @@ import streamlit as st
 #     },
 # }
 MODELS = {
-    "PyTorch": {
-        "AlexNet": "alexnet",  # single model variant
-        "ResNet": {  # multiple model variants
-            "ResNet 18": "resnet18",
-            "ResNet 34": "resnet34",
-            "ResNet 50": "resnet50",
-            "ResNet 101": "resnet101",
-            "ResNet 152": "resnet152",
-        },
-        "DenseNet": "densenet",
-        "VGG": {
-            "VGG11": "vgg11",
-            "VGG11 with batch normalization": "vgg11_bn",
-            "VGG13": "vgg13",
-            "VGG13 with batch normalization": "vgg13_bn",
-            "VGG16": "vgg16",
-            "VGG16 with batch normalization": "vgg16_bn",
-            "VGG19": "vgg19",
-            "VGG19 with batch normalization": "vgg19_bn",
-        },
-    },
     "scikit-learn": {
         "Supervised Learning": {
             "Linear Models": {
@@ -80,13 +60,13 @@ MODELS = {
                 "Bayesian Ridge Regression": "sklearn.linear_model.BayesianRidge",
                 "Automatic Relevance Determination (ARD)": "sklearn.linear_model.ARDRegression",
                 "Logistic Regression": "sklearn.linear_model.LogisticRegression",
-                "Tweedie Regressor": "sklearn.linear_model.TweedieRegressor",
+                "Tweedie Regression": "sklearn.linear_model.TweedieRegressor",
                 "Stochastic Gradient Descent Regressor": "sklearn.linear_model.SGDRegressor",
                 "Perceptron": "sklearn.linear_model.Perceptron",
-                "Passive Aggressive Regressor": "sklearn.linear_model.PassiveAggressiveRegressor",
+                "Passive Aggressive Regression": "sklearn.linear_model.PassiveAggressiveRegressor",
                 "Passive Aggressive Classification": "sklearn.linear_model.PassiveAggressiveClassifier",
                 "RANSAC (RANdom SAmple Consensus)": "sklearn.linear_model.RANSACRegressor",
-                "Theil Sen Regressor": "sklearn.linear_model.TheilSenRegressor",
+                "Theil Sen Regression": "sklearn.linear_model.TheilSenRegressor",
                 "Huber Regression": "sklearn.linear_model.HuberRegressor"
             },
             "Linear and Quadratic Discriminant Analysis": {
@@ -112,30 +92,128 @@ MODELS = {
                 "Nearest Neighbors": "sklearn.neighbors.NearestNeighbors",
                 "KDTree": "sklearn.neighbors.KDTree",
                 "Ball Tree": "sklearn.neighbors.BallTree",
-                "K-Nearest Neighbors Classification": "sklearn.neighbors.KNeighborsClassifier"
-
+                "K-Nearest Neighbors Classification": "sklearn.neighbors.KNeighborsClassifier",
+                "Radius Neighbors Classification": "sklearn.neighbors.RadiusNeighborsClassifier",
+                "K Neighbors Regression": "sklearn.neighbors.KNeighborsRegressor",
+                "Radius Neighbors Regression": "sklearn.neighbors.RadiusNeighborsRegressor",
+                "Nearest Centroid Classification": "sklearn.neighbors.NearestCentroid",
             },
             "Gaussian Processes": {
-
+                "Gaussian Process Regression (GPR)": "sklearn.gaussian_process.GaussianProcessRegressor",
+                "Gaussian Process Classification (GPC)": "sklearn.gaussian_process.GaussianProcessClassifier",
             },
             "Cross decomposition": {
-
+                "Partial Least Squares Regression": "sklearn.cross_decomposition.PLSRegression",
+                "Partial Least Squares Canonical": "sklearn.cross_decomposition.PLSCanonical"
             },
             "Naive Bayes": {
-
+                "Gaussian Naive Bayes Classification": "sklearn.naive_bayes.GaussianNB",
+                "Multi-Nomial Naive Bayes Classification": "sklearn.naive_bayes.MultinomialNB",
+                "Complement Naive Bayes Classification": "sklearn.naive_bayes.ComplementNB",
+                "Bernoulli Naive Bayes Classification": "sklearn.naive_bayes.BernoulliNB",
+                "Categorical Naive Bayes Classification": "sklearn.naive_bayes.CategoricalNB",
             },
             "Decision Trees": {
-
+                "Decision Tree Classification": "sklearn.tree.DecisionTreeClassifier",
+                "Decision Tree Regression": "sklearn.tree.DecisionTreeRegressor",
             },
             "Ensemble Methods": {
-
+                "Bagging Classification": "sklearn.ensemble.BaggingClassifier",
+                "Bagging Regression": "sklearn.ensemble.BaggingRegressor",
+                "Random Forest Classification": "sklearn.ensemble.RandomForestClassifier",
+                "Random Forest Regression": "sklearn.ensemble.RandomForestRegressor",
+                "Extra Trees Classification": "sklearn.ensemble.ExtraTreesClassifier",
+                "Extra Trees Regression": "sklearn.ensemble.ExtraTreesRegressor",
+                "AdaBoost Classification": "sklearn.ensemble.AdaBoostClassifier",
+                "AdaBoost Regression": "sklearn.ensemble.AdaBoostRegressor",
+                "Histogram-based Gradient Boosting Classification Tree": "sklearn.ensemble.HistGradientBoostingClassifier",
+                "Histogram-based Gradient Boosting Regression Tree": "sklearn.ensemble.HistGradientBoostingRegressor",
+                "Gradient Boosting Classification": "sklearn.ensemble.GradientBoostingClassifier",
+                "Gradient Boosting Regression": "sklearn.ensemble.GradientBoostingRegressor",
+                "Voting Classifier": "sklearn.ensemble.VotingClassifier",
+                "Voting Regression": "sklearn.ensemble.VotingRegressor",
+                "Stacking Classifier": "sklearn.ensemble.StackingClassifier",
+                "Stacking Regression": "sklearn.ensemble.StackingRegressor",
             },
         },
         "Unsupervised Learning": {
+            "Gaussian Mixture Models": {
+                "Gaussian Mixture": "sklearn.mixture.GaussianMixture",
+                "Variational Bayesian Gaussian Mixture": "sklearn.mixture.BayesianGaussianMixture"
+            },
+            "Manifold Learning": {
+                "Isomap": "sklearn.manifold.Isomap",
 
+            },
+            "Clustering": {
+                "K-Means Clustering": "sklearn.cluster.KMeans",
+                "Mini-Batch K-Means Clustering": "sklearn.cluster.MiniBatchKMeans",
+                "Affinity Propagation": "sklearn.cluster.AffinityPropagation",
+                "Mean Shift": "sklearn.cluster.MeanShift",
+                "Spectral Clustering": "sklearn.cluster.SpectralClustering",
+                "Agglomerative Clustering": "sklearn.cluster.AgglomerativeClustering",
+                "Density-Based Spatial Clustering of Applications with Noise (DBSCAN)": "sklearn.cluster.DBSCAN",
+                "Ordering Points To Identify the Clustering Structure (OPTICS)": "sklearn.cluster.OPTICS",
+                "Birch": "sklearn.cluster.Birch",
+            },
+            "Biclustering": {
+                "Spectral Bi-Clustering": "sklearn.cluster.SpectralBiclustering",
+                "Spectral Co-Clustering": "sklearn.cluster.SpectralCoclustering"
+            },
+            "Decomposing Signals in Components (Matrix Factorization Problems)": {
+                "Principal Component Analysis (PCA)": "sklearn.decomposition.PCA",
+                "Kernel PCA": "sklearn.decomposition.KernelPCA",
+                "Sparse PCA": "sklearn.decomposition.SparsePCA",
+                "Mini-batch Sparse PCA": "sklearn.decomposition.MiniBatchSparsePCA",
+                "Truncated Singular Value Decomposition": "sklearn.decomposition.TruncatedSVD",
+                "Sparse Coding": "sklearn.decomposition.SparseCoder",
+                "Dictionary Learning": "sklearn.decomposition.DictionaryLearning",
+                "Mini-batch Dictionary Learning": "sklearn.decomposition.MiniBatchDictionaryLearning",
+                "Factor Analysis": "sklearn.decomposition.FactorAnalysis",
+                "Independent Component Analysis": "sklearn.decomposition.FastICA",
+                "Non-negative matrix factorization": "sklearn.decomposition.NMF",
+                "Latent Dirichlet Allocation (LDA)": "sklearn.decomposition.LatentDirichletAllocation",
+            },
+            "Covariance Estimation": {
+                "Empirical Covariance": "sklearn.covariance.EmpiricalCovariance",
+                "Shrunk Covariance": "sklearn.covariance.ShrunkCovariance",
+                "Ledoit Wolf Covariance": "sklearn.covariance.LedoitWolf",
+                "Graphical Lasso": "sklearn.covariance.GraphicalLasso",
+                "Minimum Covariance Determinant (MCD)": "sklearn.covariance.MinCovDet"
+            },
+            "Novelty and Outlier Detection": {
+                "Unsupervised Outlier Detection": "sklearn.svm.OneClassSVM",
+                "Isolation Forest": "sklearn.ensemble.IsolationForest",
+                "Unsupervised Outlier Detection using Local Outlier Factor (LOF)": "sklearn.neighbors.LocalOutlierFactor"
+            },
+            "Density Estimation": {
+                "Kernel Density Estimation": "sklearn.neighbors.KernelDensity",
+            },
+            "Neural Network Models": {
+                "Bernoulli Restricted Boltzmann Machine": "sklearn.neural_network.BernoulliRBM"
+            }
         },
-        # "Perceptron": "sklearn.linear_model.Perceptron",
-        # "K-nearest neighbors": "sklearn.neighbors.KNeighborsClassifier",
+    },
+    "PyTorch": {
+        "AlexNet": "alexnet",  # single model variant
+        "ResNet": {  # multiple model variants
+            "ResNet 18": "resnet18",
+            "ResNet 34": "resnet34",
+            "ResNet 50": "resnet50",
+            "ResNet 101": "resnet101",
+            "ResNet 152": "resnet152",
+        },
+        "DenseNet": "densenet",
+        "VGG": {
+            "VGG11": "vgg11",
+            "VGG11 with batch normalization": "vgg11_bn",
+            "VGG13": "vgg13",
+            "VGG13 with batch normalization": "vgg13_bn",
+            "VGG16": "vgg16",
+            "VGG16 with batch normalization": "vgg16_bn",
+            "VGG19": "vgg19",
+            "VGG19 with batch normalization": "vgg19_bn",
+        },
     },
 }
 
@@ -161,34 +239,50 @@ def show():
         st.write("## Task")
         inputs["task"] = st.selectbox(
             "Which type of problem do you want to solve?",
-            # ("Regression", "Classification", "Clustering"),
             ("Supervised Learning", "Unsupervised Learning", "Deep Learning"),
         )
         if inputs["task"] == "Supervised Learning":
             st.write("## Model")
-            framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            # framework = st.selectbox("Which framework?", ("scikit-learn", "PyTorch"))
+            framework = st.selectbox("Which framework?", ("scikit-learn",))
             inputs["framework"] = framework
             model_task = inputs["task"]
             model_variant = st.selectbox("Which model type?", list(MODELS[framework][model_task].keys()))
+            inputs["variant"] = model_variant
             model = st.selectbox("Which model?", list(MODELS[framework][model_task][model_variant].keys()))
-            # if isinstance(MODELS[framework][model], dict):  # different model variants
-            #     model_variant = st.selectbox(
-            #         "Which model?", list(MODELS[framework][model].keys())
-            #     )
-            #     inputs["model_func"] = MODELS[framework][model][model_variant]
-            # else:  # only one variant
-            #     inputs["model_func"] = MODELS[framework][model]
-
+            inputs["model"] = model
         elif inputs["task"] == "Unsupervised Learning":
             st.write("## Model")
-            framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            # framework = st.selectbox("Which framework?", ("scikit-learn", "PyTorch"))
+            framework = st.selectbox("Which framework?", ("scikit-learn",))
             inputs["framework"] = framework
-            model = st.selectbox("Which model?", list(MODELS[framework].keys()))
+            model_task = inputs["task"]
+            model_variant = st.selectbox("Which model type?", list(MODELS[framework][model_task].keys()))
+            inputs["variant"] = model_variant
+            model = st.selectbox("Which model?", list(MODELS[framework][model_task][model_variant].keys()))
+            inputs["model"] = model
         elif inputs["task"] == "Deep Learning":
             st.write("## Model")
-            framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            # framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
+            framework = st.selectbox("Which framework?", ("PyTorch", ))
             inputs["framework"] = framework
             model = st.selectbox("Which model?", list(MODELS[framework].keys()))
+            # Show model variants if model has multiple ones.
+            if isinstance(MODELS[framework][model], dict):  # different model variants
+                model_variant = st.selectbox(
+                    "Which variant?", list(MODELS[framework][model].keys())
+                )
+                inputs["model_func"] = MODELS[framework][model][model_variant]
+            else:  # only one variant
+                inputs["model_func"] = MODELS[framework][model]
+
+            if framework == "PyTorch":
+                inputs["pretrained"] = st.checkbox("Use pre-trained model")
+                if inputs["pretrained"]:
+                    st.markdown(
+                        '<sup>Pre-training on ImageNet with 1k classes, <a href="https://pytorch.org/docs/stable/torchvision/models.html">details</a></sup>',
+                        unsafe_allow_html=True,
+                    )
         else:
             # st.write(
             #     "Classify an image into one out of several classes, based on the image content (e.g. 'cat' or 'dog')."
@@ -197,7 +291,6 @@ def show():
             framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
             inputs["framework"] = framework
             model = st.selectbox("Which model?", list(MODELS[framework].keys()))
-
             # Show model variants if model has multiple ones.
             if isinstance(MODELS[framework][model], dict):  # different model variants
                 model_variant = st.selectbox(
