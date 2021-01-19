@@ -13,7 +13,7 @@ import math
 def notebook_header(text):
     """
     Insert section header into a jinja file, formatted as notebook cell.
-    
+
     Leave 2 blank lines before the header.
     """
     return f"""# # {text}
@@ -24,7 +24,7 @@ def notebook_header(text):
 def code_header(text):
     """
     Insert section header into a jinja file, formatted as Python comment.
-    
+
     Leave 2 blank lines before the header.
     """
     seperator_len = (75 - len(text)) / 2
@@ -56,7 +56,7 @@ def download_button(
 ):
     """
     Generates a link to download the given object_to_download.
-    
+
     From: https://discuss.streamlit.io/t/a-download-button-with-custom-css/4220
 
     Params:
@@ -105,7 +105,7 @@ def download_button(
     button_uuid = str(uuid.uuid4()).replace("-", "")
     button_id = re.sub("\d+", "", button_uuid)
 
-    custom_css = f""" 
+    custom_css = f"""
         <style>
             #{button_id} {{
                 display: inline-flex;

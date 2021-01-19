@@ -1,20 +1,21 @@
 """
 Author: Jason Eisele
 Date: December 21, 2020
-Scope: Runs the streamlit app. 
+Scope: Runs the streamlit app.
 Email: jeisele@shipt.com
-Call this file in the terminal (from the `traingenerator` dir) 
+Call this file in the terminal (from the `ml-jumpstart` dir)
 via `streamlit run app/main.py`.
 """
+import os
+import uuid
+
+import utils
+import sidebar
 
 import streamlit as st
 from jinja2 import Environment, FileSystemLoader
-import uuid
 from github import Github
 from dotenv import load_dotenv
-import os
-import utils
-import sidebar
 
 
 MAGE_EMOJI_URL = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/twitter/259/mage_1f9d9.png"
