@@ -1,0 +1,15 @@
+kind: pipeline
+name: test
+
+trigger:
+  event:
+    - push
+    - pull_request
+    - tag
+
+steps:
+  - name: test
+    image: python:3.7
+    commands:
+    - pip install -r requirements.txt
+    # - pytest

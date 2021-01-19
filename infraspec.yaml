@@ -1,0 +1,38 @@
+language: python
+team: machine-learning
+metadata:
+  description: A web app to dynamically generate template code for machine learning experiments.
+deploy:
+  chart: default
+  pipeline: default
+  group: ds
+  # environments:
+  # - name: production
+    # enabled: false
+  production:
+    releaseStrategy:
+      branch: main
+      tagFormat: semver
+  staging:
+    releaseStrategy:
+      branch: main
+  locations:
+  - us-east-1
+roles:
+  webserver:
+    command: streamlit run app/main.py --server.port=8000
+    healthcheck: /healthz
+    port: 8000
+    retryPolicy:
+      count: 3
+      perTryTimeout: 150ms
+    replicaCount: 2
+    websocketPath: /stream
+    resources:
+      cpu: 50m
+      memory: 1Gi
+    telemetry:
+      graphite:
+        enabled: true
+      honeycomb:
+        enabled: true

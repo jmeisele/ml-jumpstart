@@ -1,0 +1,11 @@
+version: '3'
+services: 
+    python1:
+        container_name: ml-generator-service-1
+        restart: always
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        ports: 
+            - "8000:8000"
+        command: ["streamlit", "run", "app/main.py", "--server.port", "8000"]

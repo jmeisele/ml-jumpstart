@@ -16,8 +16,8 @@ Python 3.7+
 Install the required packages in your local environment (ideally virtualenv, conda, etc.).
 
 ```bash
-git clone https://github.com/jmeisele/ml-jumpstart.git
-cd ml-generator
+git clone https://github.com/shipt/ml-jumpstart.git
+cd ml-jumpstart
 pip install -r requirements.txt
 ``` 
 
