@@ -1,9 +1,19 @@
 # Before running, install required packages:
 {% block imports %}
-
 {% endblock %}
 
 {% block data_ingestion %}
-
 {% endblock %}
 
+{% if notebook %}
+
+!
+{%- else %}
+#
+{%- endif %}
+ pip install numpy sklearn{% if data_format == "Image files" %} torchvision{% endif %}{% if visualization_tool == "Tensorboard" %} tensorboardX{% endif %}{% if visualization_tool == "comet.ml" %} comet_ml{% endif %}
+{% if notebook %}
+
+
+# ---
+{% endif %}

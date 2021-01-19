@@ -71,13 +71,14 @@ inputs = sidebar.show()
 logger.debug(inputs)
 
 if inputs["task"] == "Image classification":
-
     # Generate code and notebook based on jinja template.
     env = Environment(
         loader=FileSystemLoader("templates"), trim_blocks=True, lstrip_blocks=True,
     )
     template = env.get_template(f"image_classification_{inputs['framework']}.py.jinja")
+    # Python template
     code = template.render(header=utils.code_header, notebook=False, **inputs)
+    # Jupyter notebook template
     notebook_code = template.render(
         header=utils.notebook_header, notebook=True, **inputs
     )
@@ -112,7 +113,52 @@ if inputs["task"] == "Image classification":
                 repo to store notebooks and register it via a .env file)
                 """
             )
+elif inputs["task"] == "Supervised Learning":
+    # Generate code and notebook based on jinja template.
+    env = Environment(
+        loader=FileSystemLoader("templates"), trim_blocks=True, lstrip_blocks=True,
+    )
+    template = env.get_template(f"supervised_learning.py.jinja2")
+    # template = env.get_template(f"supervised_learning_{inputs['framework']}.py.jinja")
 
+    # Python template
+    code = template.render(header=utils.code_header, notebook=False, **inputs)
+
+    # Jupyter Notebook template
+    notebook_code = template.render(
+        header=utils.notebook_header, notebook=True, **inputs
+    )
+    notebook = utils.to_notebook(notebook_code)
+
+    # Display donwload/open buttons.
+    st.write("")  # add vertical space
+    col1, col2, col3 = st.beta_columns(3)
+    open_colab = col1.button("🚀 Open in Colab")  # logic handled further down
+    with col2:
+        utils.download_button(code, "generated-code.py", "🐍 Download (.py)")
+    with col3:
+        utils.download_button(
+            notebook, "generated-notebook.ipynb", "📓 Download (.ipynb)"
+        )
+    colab_error = st.empty()
+
+    # Display code.
+    # TODO: Think about writing Installs on extra line here.
+    st.code(code)
+
+    # Handle "Open Colab" button. Down here because to open the new web page, it
+    # needs to create a temporary element, which we don't want to show above.
+    if open_colab:
+        if colab_enabled:
+            colab_link = add_to_colab(notebook)
+            utils.open_link(colab_link)
+        else:
+            colab_error.error(
+                """
+                **Colab support is disabled.** (If you are hosting this: Create a Github 
+                repo to store notebooks and register it via a .env file)
+                """
+            )
 # Tracking pixel to count number of visitors.
 # if os.getenv("TRACKING_NAME"):
 #     f"![](https://jrieke.goatcounter.com/count?p={os.getenv('TRACKING_NAME')})"
