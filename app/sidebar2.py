@@ -36,9 +36,9 @@ MODELS = {
     "scikit-learn": {
         "Support vectors": "sklearn.svm.SVC",
         "Random forest": "sklearn.ensemble.RandomForestClassifier",
-        "Decision tree": "sklearn.tree.DecisionTreeClassifier",
         "Perceptron": "sklearn.linear_model.Perceptron",
         "K-nearest neighbors": "sklearn.neighbors.KNeighborsClassifier",
+        "Decision tree": "sklearn.tree.DecisionTreeClassifier",
     },
 }
 
@@ -64,13 +64,13 @@ def show():
         st.write("## Task")
         inputs["task"] = st.selectbox(
             "Which problem do you want to solve?",
-            ("Regression", "Classification", "Clustering"),
+            ("Image classification", "Object detection", "Regression", "Classification"),
         )
-        if inputs["task"] == "Object detection":
-            st.write(
-                "Coming soon! [Tell me](mailto:jeisele@shipt.com) what you need."
-            )
-        else:
+        # if inputs["task"] == "Object detection":
+        #     st.write(
+        #         "Coming soon! [Tell me](mailto:johannes.rieke@gmail.com) what you need."
+        #     )
+        # else:
             # st.write(
             #     "Classify an image into one out of several classes, based on the image content (e.g. 'cat' or 'dog')."
             # )

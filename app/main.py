@@ -11,6 +11,7 @@ import uuid
 
 import utils
 import sidebar
+# import sidebar2
 
 import streamlit as st
 from jinja2 import Environment, FileSystemLoader
@@ -22,7 +23,7 @@ MAGE_EMOJI_URL = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thu
 
 # Set page title and favicon.
 st.set_page_config(
-    page_title="Code Generator for Machine Learning", page_icon=MAGE_EMOJI_URL,
+    page_title="ML-Jumpstart", page_icon=MAGE_EMOJI_URL,
 )
 
 
@@ -113,5 +114,5 @@ if inputs["task"] == "Image classification":
             )
 
 # Tracking pixel to count number of visitors.
-if os.getenv("TRACKING_NAME"):
-    f"![](https://jrieke.goatcounter.com/count?p={os.getenv('TRACKING_NAME')})"
+# if os.getenv("TRACKING_NAME"):
+#     f"![](https://jrieke.goatcounter.com/count?p={os.getenv('TRACKING_NAME')})"
