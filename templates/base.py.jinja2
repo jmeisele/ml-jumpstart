@@ -1,19 +1,89 @@
 # Before running, install required packages:
-{% block imports %}
-{% endblock %}
-
-{% block data_ingestion %}
-{% endblock %}
-
 {% if notebook %}
 
 !
 {%- else %}
 #
 {%- endif %}
- pip install numpy sklearn{% if data_format == "Image files" %} torchvision{% endif %}{% if visualization_tool == "Tensorboard" %} tensorboardX{% endif %}{% if visualization_tool == "comet.ml" %} comet_ml{% endif %}
+ pip install numpy sklearn{% if metrics_tool == "MLFlow" %} mlflow{% endif %}
+
+{# {% if true %} #}
+# pip3 install "git+https://github.com/shipt/beaker.git@master#egg=python-beaker&subdirectory=python"
+{# {% endif %} #}
 {% if notebook %}
 
 
 # ---
 {% endif %}
+
+from beaker.sql import Database
+import numpy as numpy
+{% if framework == "scikit-learn" %}
+import sklearn
+{% if scale_mean_std %}
+from sklearn.preprocessing import StandardScaler
+{% endif %}
+from sklearn.model_selection import train_test_split
+{% endif %}
+{% if metrics_tool == "MLFlow" %}
+import mlflow
+from mlflow.sklearn import save_model
+from mlflow import log_metric, log_param, log_artifacts
+{% endif %}
+
+
+{{ header("Setup") }}
+{% block setup %}
+# Snowflake DataWarehouse Connection
+snowflake = Database(ShiptDB.WAREHOUSE.value)
+{%  endblock %}
+
+{{ header("Data Extraction") }}
+{% block extract %}
+query = "<SOME-SQL-QUERY>"
+df = snowflake.query_from_str(query)
+{% endblock %}
+
+{{ header("Data Preprocessing") }}
+{% block preprocessing %}
+{% if framework == "scikit-learn"%}
+X = np.array(df[["<LIST-OF-FEATURES>"]].values)
+y = np.array(df["<TARGET-VARIABLE>"].values)
+{% if scale_mean_std %}
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
+{% endif %}
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+{% endif %}
+{% endblock %}
+
+{{ header("Model Selection") }}
+{% block model %}
+model = {{ model_func }}()
+{% endblock %}
+
+{{ header("Model Training") }}
+{% block training %}
+{% if metrics_tool == "MLFlow"%}
+"Log Hyperparameters, Metrics & Model to MLFlow"
+with mlflow.start_run() as run:
+    mlflow.set_tracking_uri("https://mlflow.ds.us-east-1.shipt.com/")
+    # Give your experiment a name
+    mlflow.set_experiment("<MY-EXPERIMENT>")
+{% if framework == "scikit-learn"%}
+    model.fit(X_train, y_train)
+{% else %}    
+    model.fit(X, y)
+{% endif %}
+    log_param()
+    log_metric()
+    log_artifacts()
+    save_model(model, "<MY-MODEL-NAME>")
+{% else %}
+model.fit(X_train, y_train)
+{% endif %}
+{% endblock %}
+
+{{ header("Model Evaluation") }}
+{% block eval %}
+{% endblock %}

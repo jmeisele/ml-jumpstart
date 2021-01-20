@@ -33,6 +33,7 @@ def show():
             inputs["variant"] = model_variant
             model = st.selectbox("Which model?", list(MODELS[framework][model_task][model_variant].keys()))
             inputs["model"] = model
+            inputs["model_func"] = MODELS[framework][model_task][model_variant][model]
         elif inputs["task"] == "Unsupervised Learning":
             st.write("## Model")
             # framework = st.selectbox("Which framework?", ("scikit-learn", "PyTorch"))
@@ -43,6 +44,7 @@ def show():
             inputs["variant"] = model_variant
             model = st.selectbox("Which model?", list(MODELS[framework][model_task][model_variant].keys()))
             inputs["model"] = model
+            inputs["model_func"] = MODELS[framework][model_task][model_variant][model]
         elif inputs["task"] == "Deep Learning":
             st.write("## Model")
             # framework = st.selectbox("Which framework?", ("PyTorch", "scikit-learn"))
