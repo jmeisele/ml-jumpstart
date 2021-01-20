@@ -7,9 +7,7 @@
 {%- endif %}
  pip install numpy sklearn{% if metrics_tool == "MLFlow" %} mlflow{% endif %}
 
-{# {% if true %} #}
-# pip3 install "git+https://github.com/shipt/beaker.git@master#egg=python-beaker&subdirectory=python"
-{# {% endif %} #}
+# pip install "git+https://github.com/shipt/beaker.git@master#egg=python-beaker&subdirectory=python"
 {% if notebook %}
 
 
@@ -17,13 +15,14 @@
 {% endif %}
 
 from beaker.sql import Database
-import numpy as numpy
+import numpy as np
 {% if framework == "scikit-learn" %}
 import sklearn
 {% if scale_mean_std %}
 from sklearn.preprocessing import StandardScaler
 {% endif %}
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score
 {% endif %}
 {% if metrics_tool == "MLFlow" %}
 import mlflow
@@ -51,9 +50,9 @@ X = np.array(df[["<LIST-OF-FEATURES>"]].values)
 y = np.array(df["<TARGET-VARIABLE>"].values)
 {% if scale_mean_std %}
 scaler = StandardScaler()
-X = scaler.fit_transform(X)
+X_scaled = scaler.fit_transform(X)
 {% endif %}
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 {% endif %}
 {% endblock %}
 
@@ -86,4 +85,7 @@ model.fit(X_train, y_train)
 
 {{ header("Model Evaluation") }}
 {% block eval %}
+model.score(X_test, y_test)
+scores = cross_val_score(model, X, y, cv=5)
+scores
 {% endblock %}
